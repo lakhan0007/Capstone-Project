@@ -4,6 +4,8 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 // import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import { ImagetoBase64 } from "../utility/ImagetoBase64";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -51,28 +53,24 @@ const Signup = () => {
     const { firstName, email, password, confirmPassword } = data;
     if (firstName && email && password && confirmPassword)
       if (password === confirmPassword) {
-        // const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/signup`,{
-        //   method : 'POST',
-        //   headers : {
-        //     "content-type" : "application/json",
-        //   },
-        //   body : JSON.stringify(data)
-        // })
+        const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/signup`,{
+          method : "POST",
+          headers : {
+            "content-type" : "application/json"
+          },
+          body : JSON.stringify(data)
+        })
 
-        const fetchData = await fetch(
-          `${process.env.REACT_APP_SERVER_DOMIN}/signup`,
-          {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify(data),
-          }
-        );
+
         const dataRes = await fetchData.json();
         console.log(dataRes);
-        alert("SUCCESSFULL");
-        // navigate('/login')
+        // alert(dataRes.message);
+        toast(dataRes.message);
+        if(dataRes.alert){
+          navigate('/login')
+
+        }
+
       } else {
         alert("Password and confirm password does't match");
       }
