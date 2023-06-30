@@ -42,23 +42,37 @@ const userModel = mongoose.model('User',userSchema)
 app.get("/",(req, res) => {
     res.send("SERVER IS RUNNING")
 })
+
+// SIGN UP API
 app.post("/signup", async (req, res) => {
     // console.log(req.body);
     const { email } = req.body;
-  
-    userModel.findOne({ email: email }, (err, result) => {
-      // console.log(result);
-      console.log(err);
-      if (result) {
-        res.send({ message: "Email id is already register", alert: false });
-      } else {
-        const data = userModel(req.body);
-        const save = data.save();
-        res.send({ message: "Successfully sign up", alert: true });
-      }
-    });
+    const user = await userModel.findOne({ email: email });
+    if(user){
+      res.send({ message: "Email id is already register", alert: false });
+    }
+    await userModel.create(req.body);
+    res.send({ message: "Successfully sign up", alert: true });
+
   });
 
+//   LOGIN API
+app.post("/login", (req, res) => {
+    // console.log(req.body);
+    const { email } = req.body;
+    const user = userModel.findOne({ email: email });
+    if (user) {
+      const dataSend = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        image: user.image,
+      }
+      res.send({message: "Login is successfully",alert: true,data: dataSend,});
+    }
+    res.send({ message: "Email is not available, please sign up",alert: false,});
+  });
 
 
 // SERVER IS RUNNING

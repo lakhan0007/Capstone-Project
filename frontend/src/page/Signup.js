@@ -53,17 +53,19 @@ const Signup = () => {
     const { firstName, email, password, confirmPassword } = data;
     if (firstName && email && password && confirmPassword)
       if (password === confirmPassword) {
-        const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/signup`,{
-          method : "POST",
+        const fetchData = fetch(`${process.env.REACT_APP_SERVER_DOMIN}/signup`,{
+          method : "post",
           headers : {
             "content-type" : "application/json"
           },
           body : JSON.stringify(data)
-        })
-
-
-        const dataRes = await fetchData.json();
+        }) .then((res)=>{
+          res.json();
+        }).then(data=> data).catch(err=> console.log(err,"errrrrr"))
+        console.log(fetchData,"fetchData")
+        const dataRes = fetchData
         console.log(dataRes);
+      
         // alert(dataRes.message);
         toast(dataRes.message);
         if(dataRes.alert){
@@ -170,7 +172,7 @@ const Signup = () => {
             </span>
           </div>
 
-          <button className="w-full max-w-[150px] m-auto  bg-red-500 hover:bg-red-600 cursor-pointer  text-white text-xl font-medium text-center py-1 rounded-full mt-4">
+          <button type="submit" className="w-full max-w-[150px] m-auto  bg-red-500 hover:bg-red-600 cursor-pointer  text-white text-xl font-medium text-center py-1 rounded-full mt-4">
             Sign up
           </button>
         </form>
