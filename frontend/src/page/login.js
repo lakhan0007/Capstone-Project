@@ -5,6 +5,9 @@ import { Link} from "react-router-dom";
 import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { loginRedux } from "../redux/userSlice";
+
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +16,15 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate()  
-  console.log(data);
+
+const userData = useSelector(state => state)
+// console.log(userData.user);
+
+const dispatch = useDispatch()
+
+
+
+
   const handleShowPassword = () => {
     setShowPassword((preve) => !preve);
   };
@@ -47,9 +58,12 @@ const Login = () => {
       console.log(dataRes);
       toast(dataRes.message)
       if(dataRes.alert){
+        dispatch(loginRedux(dataRes))
         setTimeout(()=>{
           navigate("/")
         }, 1000);
+        console.log(userData);
+
       }
     } else {
       alert("Please Enter required fields");
